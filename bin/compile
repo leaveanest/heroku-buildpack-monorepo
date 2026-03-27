@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Promotes APP_BASE subdirectory to the build root.
+set -euo pipefail
+
+readonly BUILD_DIR="${1:?}"
+readonly ENV_DIR="${3:?}"
+readonly APP_BASE="$(cat "${ENV_DIR}/APP_BASE")"
+
+if [[ ! -d "${BUILD_DIR}/${APP_BASE}" ]]; then
+  echo " !     Directory '${APP_BASE}' not found in repository." >&2
+  exit 1
+fi
+
+echo "-----> Monorepo: promoting '${APP_BASE}' to build root"
+
+readonly STAGE="$(mktemp -d)"
+cp -a "${BUILD_DIR}/${APP_BASE}/." "${STAGE}/"
+find "${BUILD_DIR}" -mindepth 1 -delete
+cp -a "${STAGE}/." "${BUILD_DIR}/"
+rm -rf "${STAGE}"
+
+echo "       Done."
