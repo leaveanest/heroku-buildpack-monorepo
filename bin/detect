@@ -1,10 +1,2 @@
 #!/usr/bin/env bash
-set -euo pipefail
-
-readonly ENV_DIR="${3:-}"
-
-if [[ -z "${ENV_DIR}" ]] || [[ ! -f "${ENV_DIR}/APP_BASE" ]]; then
-  exit 1
-fi
-
 echo "Monorepo"
